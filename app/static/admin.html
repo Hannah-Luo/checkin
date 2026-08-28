@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+
+<div class="bar">
+  <strong>Admin</strong>
+  <span class="label" id="sessionLabel">-</span>
+  <span class="grow"></span>
+  <button class="pill" id="relToggle">Release: off</button>
+  <nav>
+    <a href="/operator">Operator</a>
+    <a href="/admin" class="here">Admin</a>
+  </nav>
+</div>
+
+<div class="wrap">
+  <div id="rooms"></div>
+  <div class="chips" style="margin:0 0 1rem">
+    <button class="small" id="addRoom">Add room</button>
+    <span class="note">each room is one session's table map and settings</span>
+  </div>
+
+  <div class="cols">
+    <div>
+
+      <div class="panel">
+        <h3>Roster sheet</h3>
+        <input id="sheetUrl" type="text" autocomplete="off" spellcheck="false"
+               placeholder="paste the Google Sheet link, then Connect">
+        <div class="chips">
+          <button class="small" id="connect">Connect</button>
+          <button class="small" id="reload">Reload now</button>
+          <a id="sheetLink" href="#" target="_blank" class="note">open the sheet</a>
+        </div>
+        <div id="sheetMsg" style="margin-top:.5rem"></div>
+        <div class="note" id="rosterNote" style="margin-top:.5rem"></div>
+        <div class="note" id="rosterCounts" style="margin-top:.15rem"></div>
+        <div class="note" id="rosterLive" style="margin-top:.15rem"></div>
+        <div id="rosterIssues" style="margin-top:.5rem"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Write-back link</h3>
+        <label class="note" for="wbUrl" style="display:block">
+          Apps Script Web App link (ends in /exec)</label>
+        <input id="wbUrl" type="text" autocomplete="off" spellcheck="false"
+               placeholder="https://script.google.com/macros/s/…/exec">
+        <div class="chips" style="margin-top:.5rem">
+          <label class="note">secret
+            <input id="wbSecret" type="password" autocomplete="off"
+                   placeholder="unchanged" style="width:9rem"></label>
+          <label class="note">mode
+            <select id="wbMode">
+              <option value="off">off</option>
+              <option value="live">live</option>
+            </select></label>
+          <button class="small" id="wbSave">Save link</button>
+        </div>
+        <div id="wbMsg" style="margin-top:.5rem"></div>
+        <div id="wbTarget" style="margin-top:.4rem"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Google Sheet write-back</h3>
+        <div class="chips">
+          <span class="pill" id="sheetPill">off</span>
+          <button class="small" id="flush">Send now</button>
+        </div>
+        <div class="note" id="sheetNote" style="margin-top:.5rem"></div>
+        <div id="sheetLog" style="margin-top:.5rem"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <h3>Check someone in</h3>
+        <input id="adminQuery" type="text" autocomplete="off" autocapitalize="off"
+               spellcheck="false" placeholder="the last 4 digits/full matric/name">
+        <div class="chips">
+          <button class="small" id="adminGo">Check in</button>
+          <span class="note">Enter to check in · Esc to clear</span>
+        </div>
+        <div id="adminResult" style="margin-top:.7rem"></div>
+        <div class="chips" id="adminCandidates"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Waiting list (promotion order)</h3>
+        <div class="scroll"><table id="waiting"></table></div>
+      </div>
+
+      <div class="panel">
+        <h3>Seated <span class="note" id="seatCount"></span></h3>
+        <div class="scroll"><table id="seated"></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/common.js"></script>
+<script src="/static/admin.js"></script>
+</body>
+</html>

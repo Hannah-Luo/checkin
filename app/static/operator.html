@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Check-in desk</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+
+<div class="bar">
+  <strong>Check-in desk</strong>
+  <span class="label" id="sessionLabel">&ndash;</span>
+  <span id="roomSwitch" style="display:flex; gap:.5rem"></span>
+  <span class="grow"></span>
+  <button class="pill" id="relToggle">Release: off</button>
+  <span class="pill" id="sheetPill">sheet off</span>
+  <nav>
+    <a href="/operator" class="here">Operator</a>
+    <a href="/admin">Admin</a>
+  </nav>
+</div>
+<div class="warn strip" id="invariants"></div>
+
+<div class="wrap">
+      <div class="panel">
+        <h3>Camera <span class="note" id="camStatus">off</span></h3>
+        <div class="camrow">
+          <div class="camcol">
+            <div class="camwrap" id="camwrap">
+              <video id="cam" autoplay muted playsinline></video>
+              <div class="camnote" id="camNote" hidden></div>
+            </div>
+            <div class="camalert" id="camAlert"></div>
+          </div>
+          <div class="student" id="student">
+            <div class="steps">
+              <h2>Check in here</h2>
+              <ol>
+                <li>Open <b>NTU Pass</b></li>
+                <li>Tap the <b>&#10530; expand icon</b> on your card</li>
+                <li>Hold your phone up to the camera, screen facing it</li>
+                <li>Hold it steady for a moment, if it does not read,
+                    the experimenter will help you</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <div class="chips">
+          <button id="camToggle">Start camera</button>
+          <select id="camDevice" title="Which camera"></select>
+          <span class="note" id="camStats"></span>
+        </div>
+        <div class="note" id="camRead"></div>
+      </div>
+
+      <div class="panel" id="manualPanel" hidden>
+        <h3>Manual entry &mdash; Identity Data</h3>
+        <input id="query" type="text" autocomplete="off" autocapitalize="off"
+               spellcheck="false" placeholder="type here &mdash; Esc twice to hide">
+        <div class="chips">
+          <button class="small danger" id="undoLast">Undo last (Ctrl+Z)</button>
+          <span class="note" id="hint">Enter to check in &middot; Esc to clear</span>
+        </div>
+        <div id="result" style="margin-top:.9rem">
+          <div class="who">Ready</div>
+          <div class="sub">Waiting for the next student.</div>
+        </div>
+        <div class="chips" id="candidates"></div>
+      </div>
+
+  <div class="cols even">
+    <div>
+      <div class="panel">
+        <h3>Seated <span class="note" id="seatCount"></span></h3>
+        <div class="scroll"><table id="seated"></table></div>
+        <div class="note" id="projection" style="margin-top:.5rem"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="head-row">
+          <h3>Waiting list <span class="note" id="waitCount"></span></h3>
+          <span class="grow"></span>
+          <button id="promote">Promote next</button>
+        </div>
+        <div class="scroll"><table id="waiting"></table></div>
+        <div class="note" id="promoteHint" style="margin-top:.5rem"></div>
+      </div>
+
+      <div class="panel" id="walkinPanel" hidden>
+        <div class="head-row">
+          <h3>Walk-in list <span class="note" id="walkinCount"></span></h3>
+          <span class="grow"></span>
+          <button id="admitAnyway">Admit anyway</button>
+        </div>
+        <div class="scroll"><table id="walkins"></table></div>
+        <div class="note" id="admitHint" style="margin-top:.5rem"></div>
+      </div>
+
+      <div class="panel" id="releasedPanel" hidden>
+        <h3>Released <span class="note" id="relCount"></span></h3>
+        <div class="scroll"><table id="released"></table></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/common.js"></script>
+<script src="/static/operator.js"></script>
+</body>
+</html>

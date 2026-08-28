@@ -1,0 +1,36 @@
+session:
+  number: 1
+  start_time: "10:00"
+  operator: ""
+
+layout:
+  total_tables: 29
+  seat_order: "random"
+
+grouping:
+  group_size: 4
+  enforce_complete_groups: true
+  group_formation: "consecutive"
+
+waitlist:
+  allow_wrong_session: true
+  allow_not_in_roster: false
+  block_repeat_values: ["2"]
+
+roster:
+  sheet_id: ""
+  gid: ""
+  csv_path: ""
+  cache_path: "data/roster_cache.csv"
+  timeout_seconds: 10
+  refresh_seconds: 60
+  confirmed_true_values: ["1", "yes", "y", "true", "confirmed"]
+
+sheet_writeback:
+  enabled: true
+  dry_run: false
+  webapp_url: ""
+  shared_secret: ""
+
+storage:
+  db_path: "data/checkin.db"

@@ -1,0 +1,8 @@
+opencv-python
+rapidocr-onnxruntime
+rapidfuzz
+fastapi
+uvicorn
+pyyaml
+requests
+pillow
