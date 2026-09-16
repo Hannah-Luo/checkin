@@ -3,6 +3,7 @@ let dirty = false;
 
 let roomEls = {};
 let roomsSig = '';
+let shownSession = null;
 
 const roomKey = (r) => `${r.session}:${r.room}`;
 
@@ -129,6 +130,7 @@ function renderRooms(s) {
 
 function render(s) {
   const c = s.counters;
+  shownSession = s.session;
   $('sessionLabel').textContent = `${c.label} · ${s.settings.total_tables} tables · group size ${s.settings.group_size}`;
 
   renderRooms(s);
@@ -165,6 +167,7 @@ function render(s) {
     : (sh.queue_depth ? `${sh.queue_depth} queued` : 'live');
   $('sheetPill').className = 'pill' + (sh.enabled && !sh.last_error ? ' on' : '');
   $('flush').disabled = !sh.enabled;
+  $('resend').disabled = !sh.enabled;
 
   if (!dirty) {
     $('wbUrl').value = wb.url || '';
@@ -233,6 +236,20 @@ $('flush').addEventListener('click', async () => {
   const r = await api('/api/sheet/flush', {});
   $('sheetNote').textContent = JSON.stringify(r.result);
   await refresh();
+});
+
+$('resend').addEventListener('click', async () => {
+  const btn = $('resend');
+  btn.disabled = true;
+  try {
+    const r = await api('/api/sheet/resend', {});
+    await refresh();
+    $('sheetNote').textContent = r.result.error
+      ? r.result.error
+      : `re-queued ${r.result.queued} row(s) for session ${shownSession}`;
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 function showAdminResult(r, typed) {
