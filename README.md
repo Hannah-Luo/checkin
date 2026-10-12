@@ -115,6 +115,42 @@ There is no export. The table number is written into the responses sheet as it i
 
 This is how the desk should run. Everything is on the laptop, and the only network call is to the Google Sheet.
 
+### First time on a laptop
+
+The repository does not carry a Python environment (`.venv\` is gitignored), so `start.bat` cannot run until you have made one. This needs Python 3.12, the version the project is built and tested on, and is done once per laptop.
+
+1. Clone the repository, or download it as a ZIP from GitHub and extract it.
+2. Open a terminal in the project folder and create the environment:
+
+   ```bash
+   python -m venv .venv
+   ```
+
+   ```bash
+   .venv\Scripts\python.exe -m pip install -r requirements.txt
+   ```
+
+3. Double-click `start.bat` once to check it works. If the project came as a ZIP, Windows may warn that the file came from the internet; choose *Run* (or *More info*, then *Run anyway*).
+
+### A desktop shortcut (optional)
+
+`start.bat` keeps the standard Windows batch-file icon, which cannot be changed. A shortcut can have its own icon, and `tools\checkin.ico` is there for that. The shortcut is not in the repository, because it records the full path to `start.bat` on the laptop that made it; each laptop makes its own.
+
+1. Right-click `start.bat` in the project folder. On Windows 11, choose *Show more options* first.
+2. *Send to*, then *Desktop (create shortcut)*.
+3. On the desktop, right-click the new shortcut, then *Rename*, and call it something like `Lab Check-In`.
+4. Right-click it again, then *Properties*. On the *Shortcut* tab, press *Change Icon...*, then *Browse...*, and pick `tools\checkin.ico` inside the project folder. *OK*, then *OK*.
+
+If you move the project folder, delete the shortcut and make a new one; the old one still points at the old place. If `tools\checkin.ico` is moved or deleted, the shortcut still works but shows a blank icon.
+
+To keep it on the taskbar as well, right-click the shortcut, *Show more options*, then *Pin to taskbar*.
+
+### Every day
+
+**Double-click `start.bat`**, or the shortcut. It starts the server in a console window and opens `/operator` as soon as the server answers. Closing that window stops the server. If the server is already running it only opens the page, so a second click never starts a competing copy. If the server fails to start, the window stays open with the error in it.
+
+The command it runs, if you would rather type it:
+
 ```bash
 .venv\Scripts\python.exe -m app.server
 ```
@@ -131,14 +167,7 @@ This is how the desk should run. Everything is on the laptop, and the only netwo
 
 **Frames stay on the laptop.** The browser draws the camera onto a canvas, encodes a JPEG at quality 0.8, and posts it as the raw body of `/api/frame`. It asks the camera for 1280x720, but that is a preference rather than a constraint, so the canvas follows whatever size the camera actually hands back. The loop waits for each reply before it grabs the next frame, so the rate is one over the round trip — about four a second at a healthy 250 ms, slower when OCR is slower, and never faster than the server can read. On `127.0.0.1` the post crosses the loopback interface, so the picture never reaches a network adapter. Hosted, that same loop becomes a continuous stream of students' faces to a third-party server: still written to disk nowhere, but transmitted, and sitting in someone else's memory while it is read. [What happens to a frame](#what-happens-to-a-frame) traces one from the canvas to the reply.
 
-**Use the project's own `.venv`,** never a Conda base environment. OpenCV and ONNX Runtime are both compiled against the NumPy C ABI, so they inherit whatever NumPy is already installed. A base environment carrying a NumPy/SciPy version conflict turns that into an import-time crash in native code rather than a readable pip error, and pip resolving NumPy to suit them can break unrelated packages in the same environment. A venv is disposable and leaves the base install untouched.
-
-Fresh install:
-
-```bash
-python -m venv .venv
-.venv\Scripts\python.exe -m pip install -r requirements.txt
-```
+**Use the project's own `.venv`,** never a Conda base environment. OpenCV and ONNX Runtime are both compiled against the NumPy C ABI, so they inherit whatever NumPy is already installed. A base environment carrying a NumPy/SciPy version conflict turns that into an import-time crash in native code rather than a readable pip error, and pip resolving NumPy to suit them can break unrelated packages in the same environment. A venv is disposable and leaves the base install untouched. To rebuild a broken one, delete `.venv\` and repeat [First time on a laptop](#first-time-on-a-laptop).
 
 Time the OCR engine in the running process. Healthy is 250-400 ms per frame; seconds per frame means something heavy is running, a second copy of the server is competing for cores, the laptop is on battery saver, or free RAM has run out and it is swapping:
 
@@ -328,11 +357,12 @@ No name and no matric ever appears on it.
 	
 ## Project layout
 
-Eleven modules, six static files, three tools, one config file.
+Eleven modules, six static files, three tools, one config file, one launcher.
 
 | Path | What it is |
 |---|---|
 | `README.md` | this file, the only documentation in the working tree |
+| `start.bat` | double-click launcher: starts the server and opens `/operator` |
 | `requirements.txt` | dependencies |
 | `.gitignore` | keeps the venv, the runtime data and `backup\` out of a repository |
 | `config\session.yaml` | per-session configuration |
@@ -350,6 +380,7 @@ Eleven modules, six static files, three tools, one config file.
 | `tools\apps_script.gs` | paste into the sheet, deploy as a Web App |
 | `tools\make_test_card.py` | render fake NTU Pass cards. Also used for the engine warm-up |
 | `tools\purge.py` | delete the check-ins and roster cache this laptop is holding |
+| `tools\checkin.ico` | the icon for the desktop shortcut |
 | `data\` | `checkin.db`, roster cache, `settings.json`. Runtime, gitignored |
 | `.venv\` | the local runtime |
 
